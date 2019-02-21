@@ -1,6 +1,18 @@
 # GitHub Popular Searches
 ### A [Postman](https://www.getpostman.com/) collection to discover popular repositories on [GitHub](https://github.com) for a given search query.
 
+```js
+
+  _____   ____   _____ _______ __  __          _   _ 
+ |  __ \ / __ \ / ____|__   __|  \/  |   /\   | \ | |
+ | |__) | |  | | (___    | |  | \  / |  /  \  |  \| |
+ |  ___/| |  | |\___ \   | |  | |\/| | / /\ \ | . ` |
+ | |    | |__| |____) |  | |  | |  | |/ ____ \| |\  |
+ |_|     \____/|_____/   |_|  |_|  |_/_/    \_\_| \_|
+                                                     
+                                                     
+```
+
 > **This collection is published [here](https://documenter.getpostman.com/view/6186519/RznEKdvc).**
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/e6d6eaba6eeaaec69bc5)
