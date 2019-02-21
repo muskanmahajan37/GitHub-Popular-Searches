@@ -1,0 +1,628 @@
+{
+	"info": {
+		"_postman_id": "285b1868-19ba-46bd-ba81-65b32939a806",
+		"name": "GitHub Popular Searches",
+		"description": "A collection to discover popular repositories on [GitHub](https://github.com) for a given search query.\n\n> Set the following environment variables before you run this collection : \n- **{{searchTerm}}** : the query you want to search\n- **{{maxSize}}** : maximum number of repositories you want to fetch\n\nIt sends the popular repository on Slack channel using webhook.\n\n> This collection uses [Github API](https://developer.github.com/v3/) to fetch comments and sends a report to an internal Slack channel using a [webhook](https://api.slack.com/incoming-webhooks#sending_messages).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "npm search",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "76de0459-578a-4057-889f-ded1f7d634a1",
+						"exec": [
+							"let counter = 0; //variable to store ",
+							"",
+							"pm.environment.set(\"counter\", counter); ",
+							"pm.environment.set(\"popularRepos\",\"\"); // this variable stores popular repos"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2f089962-a685-4b8e-b32e-a50fce9d630b",
+						"exec": [
+							"let response = pm.response.json();",
+							"",
+							"console.log(response.objects.length);",
+							"",
+							"// tests",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json; ",
+							"});",
+							"",
+							"pm.environment.set(\"repoCount\", response.objects.length); // number of repositories returned",
+							"",
+							"let repoData = [];",
+							"",
+							"response.objects.forEach(function(item){",
+							"    ",
+							"    let repoUrl = item.package.links.repository",
+							"    let npmData = repoUrl.replace(\"https://github.com/\",\"\").split(\"/\"); //regex to remove special characters",
+							"    ",
+							"    repoData.push({",
+							"        ",
+							"        \"repoName\" : npmData[1],",
+							"        \"userName\" : npmData[0],",
+							"        \"repoUrl\" : repoUrl,",
+							"            ",
+							"        });",
+							"        pm.environment.set(\"repoData\", JSON.stringify(repoData));",
+							"        ",
+							"});",
+							"",
+							"console.log(repoData);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://registry.npmjs.com/-/v1/search?text={{searchTerm}}&size={{maxSize}}",
+					"protocol": "http",
+					"host": [
+						"registry",
+						"npmjs",
+						"com"
+					],
+					"path": [
+						"-",
+						"v1",
+						"search"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "{{searchTerm}}"
+						},
+						{
+							"key": "size",
+							"value": "{{maxSize}}"
+						}
+					]
+				},
+				"description": "API call to [NPM](https://www.npmjs.com) to fetch the popular GitHub Repositories for a given search query."
+			},
+			"response": [
+				{
+					"name": "Popular GitHub repositories on npm",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://registry.npmjs.com/-/v1/search?text={{searchTerm}}&size={{maxSize}}",
+							"protocol": "http",
+							"host": [
+								"registry",
+								"npmjs",
+								"com"
+							],
+							"path": [
+								"-",
+								"v1",
+								"search"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "{{searchTerm}}"
+								},
+								{
+									"key": "size",
+									"value": "{{maxSize}}"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 24 Jan 2019 13:15:00 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "max-age=300"
+						},
+						{
+							"key": "CF-Ray",
+							"value": "49e2c4254e55c956-HYD"
+						},
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Expect-CT",
+							"value": "max-age=604800, report-uri=\"https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct\""
+						},
+						{
+							"key": "vary",
+							"value": "accept-encoding, accept"
+						},
+						{
+							"key": "Server",
+							"value": "cloudflare"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"objects\": [\n        {\n            \"package\": {\n                \"name\": \"dateformat-converter\",\n                \"scope\": \"unscoped\",\n                \"version\": \"2.0.1\",\n                \"description\": \"Package to convert between dateformats\",\n                \"keywords\": [\n                    \"date\",\n                    \"dateformat\",\n                    \"convert\"\n                ],\n                \"date\": \"2017-08-06T22:43:00.078Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/dateformat-converter\",\n                    \"homepage\": \"https://github.com/tigermarques/dateformat-converter#readme\",\n                    \"repository\": \"https://github.com/tigermarques/dateformat-converter\",\n                    \"bugs\": \"https://github.com/tigermarques/dateformat-converter/issues\"\n                },\n                \"author\": {\n                    \"name\": \"João G. Marques\",\n                    \"email\": \"joao.gsilva.marques@gmail.com\",\n                    \"username\": \"jgmarques\"\n                },\n                \"publisher\": {\n                    \"username\": \"jgmarques\",\n                    \"email\": \"joao.gsilva.marques@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"jgmarques\",\n                        \"email\": \"joao.gsilva.marques@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6572425358921978,\n                \"detail\": {\n                    \"quality\": 0.985085336826455,\n                    \"popularity\": 0.03354602670272394,\n                    \"maintenance\": 0.9999309299951653\n                }\n            },\n            \"searchScore\": 0.0014748968\n        },\n        {\n            \"package\": {\n                \"name\": \"yadate-converter\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.0.3\",\n                \"description\": \"Yet another date to string and string to date converter\",\n                \"keywords\": [\n                    \"date\",\n                    \"parse\",\n                    \"format\"\n                ],\n                \"date\": \"2018-12-21T19:40:23.895Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/yadate-converter\",\n                    \"homepage\": \"https://github.com/rdeak/yadate-converter#readme\",\n                    \"repository\": \"https://github.com/rdeak/yadate-converter\",\n                    \"bugs\": \"https://github.com/rdeak/yadate-converter\"\n                },\n                \"author\": {\n                    \"name\": \"Robert Deak\"\n                },\n                \"publisher\": {\n                    \"username\": \"rdeak\",\n                    \"email\": \"robert.deak@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"rdeak\",\n                        \"email\": \"robert.deak@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6540706572274688,\n                \"detail\": {\n                    \"quality\": 0.9681031101566123,\n                    \"popularity\": 0.03908462545219065,\n                    \"maintenance\": 0.9998860150634812\n                }\n            },\n            \"searchScore\": 0.00048019615\n        },\n        {\n            \"package\": {\n                \"name\": \"jalali-date\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.0.2\",\n                \"description\": \"A Jalali to Gregorian converter with support of formatting output\",\n                \"keywords\": [\n                    \"jalali\",\n                    \"sun\",\n                    \"shamsi\",\n                    \"calendar\",\n                    \"gregorian\",\n                    \"converter\"\n                ],\n                \"date\": \"2017-11-27T20:36:12.459Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/jalali-date\",\n                    \"homepage\": \"https://github.com/arashm/JDate\",\n                    \"repository\": \"https://github.com/arashm/JDate\",\n                    \"bugs\": \"https://github.com/arashm/JDate/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Arash Mousavi\"\n                },\n                \"publisher\": {\n                    \"username\": \"arashm\",\n                    \"email\": \"mousavi.arash@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"arashm\",\n                        \"email\": \"mousavi.arash@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6655967069556317,\n                \"detail\": {\n                    \"quality\": 0.9440797381365588,\n                    \"popularity\": 0.09264462224477407,\n                    \"maintenance\": 0.9998490506542661\n                }\n            },\n            \"searchScore\": 0.00038066052\n        },\n        {\n            \"package\": {\n                \"name\": \"nepali-date-converter\",\n                \"scope\": \"unscoped\",\n                \"version\": \"2.0.0\",\n                \"description\": \"A small Js library to convert English date to Nepali and Vice Versa\",\n                \"keywords\": [\n                    \"nepali\",\n                    \"date\",\n                    \"english\",\n                    \"date\",\n                    \"converter\"\n                ],\n                \"date\": \"2018-10-13T03:15:49.174Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/nepali-date-converter\",\n                    \"homepage\": \"https://github.com/subeshb1/Nepali-Date#readme\",\n                    \"repository\": \"https://github.com/subeshb1/Nepali-Date\",\n                    \"bugs\": \"https://github.com/subeshb1/Nepali-Date/issues\"\n                },\n                \"author\": {\n                    \"name\": \"'Subesh\",\n                    \"email\": \"'subeshb1@gmail.com'\"\n                },\n                \"publisher\": {\n                    \"username\": \"subeshb1\",\n                    \"email\": \"subeshb1@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"subeshb1\",\n                        \"email\": \"subeshb1@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6016008385516818,\n                \"detail\": {\n                    \"quality\": 0.8216378300163998,\n                    \"popularity\": 0.014630764906361877,\n                    \"maintenance\": 0.999967776655815\n                }\n            },\n            \"searchScore\": 0.00030264116\n        },\n        {\n            \"package\": {\n                \"name\": \"stardate-converter\",\n                \"scope\": \"unscoped\",\n                \"version\": \"2.0.0\",\n                \"description\": \"Converts common date to Star Trek stardate\",\n                \"keywords\": [\n                    \"stardate\",\n                    \"star trek\",\n                    \"converter\",\n                    \"calculator\",\n                    \"date\"\n                ],\n                \"date\": \"2017-04-01T11:57:00.346Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/stardate-converter\",\n                    \"homepage\": \"https://github.com/zeroturnaround/stardate-converter#readme\",\n                    \"repository\": \"https://github.com/zeroturnaround/stardate-converter\",\n                    \"bugs\": \"https://github.com/zeroturnaround/stardate-converter/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Uku Pattak\"\n                },\n                \"publisher\": {\n                    \"username\": \"ukupat\",\n                    \"email\": \"ukupat@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"zeroturnaround\",\n                        \"email\": \"npm@zeroturnaround.com\"\n                    },\n                    {\n                        \"username\": \"ukupat\",\n                        \"email\": \"ukupat@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6484152465932072,\n                \"detail\": {\n                    \"quality\": 0.9479210125852754,\n                    \"popularity\": 0.04027995303429054,\n                    \"maintenance\": 0.9998313121589226\n                }\n            },\n            \"searchScore\": 0.00022775873\n        },\n        {\n            \"package\": {\n                \"name\": \"asgardia-calendar-converter\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.0.1\",\n                \"description\": \"Convert date between Gregorian and Asgardian calendars\",\n                \"date\": \"2017-03-15T06:02:33.067Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/asgardia-calendar-converter\",\n                    \"homepage\": \"https://github.com/katemihalikova/asgardia-calendar-converter#readme\",\n                    \"repository\": \"https://github.com/katemihalikova/asgardia-calendar-converter\",\n                    \"bugs\": \"https://github.com/katemihalikova/asgardia-calendar-converter/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Kate Miháliková\",\n                    \"email\": \"kate@katemihalikova.cz\"\n                },\n                \"publisher\": {\n                    \"username\": \"kate.mihalikova\",\n                    \"email\": \"kate.mihalikova@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"katemihalikova\",\n                        \"email\": \"npm@katemihalikova.cz\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6509491904243163,\n                \"detail\": {\n                    \"quality\": 0.9540934336850052,\n                    \"popularity\": 0.042229145894833744,\n                    \"maintenance\": 0.9998313121589226\n                }\n            },\n            \"searchScore\": 0.00018061636\n        },\n        {\n            \"package\": {\n                \"name\": \"bella-date\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.1.2\",\n                \"description\": \"To manipulate date/time values\",\n                \"keywords\": [\n                    \"date\",\n                    \"datetime\",\n                    \"formatter,\",\n                    \"converter\",\n                    \"util\"\n                ],\n                \"date\": \"2017-08-07T06:22:06.132Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/bella-date\",\n                    \"homepage\": \"https://www.npmjs.com/package/bella-date\",\n                    \"repository\": \"https://github.com/ndaidong/bella-date\",\n                    \"bugs\": \"https://github.com/ndaidong/bella-date/issues\"\n                },\n                \"author\": {\n                    \"name\": \"@ndaidong\"\n                },\n                \"publisher\": {\n                    \"username\": \"ndaidong\",\n                    \"email\": \"ndaidong@protonmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"dongnd\",\n                        \"email\": \"ndaidong@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6403117698163402,\n                \"detail\": {\n                    \"quality\": 0.9228176725392214,\n                    \"popularity\": 0.03854469301790267,\n                    \"maintenance\": 0.9999309299951653\n                }\n            },\n            \"searchScore\": 0.00017534228\n        },\n        {\n            \"package\": {\n                \"name\": \"@vitorteccom/dekajs\",\n                \"scope\": \"vitorteccom\",\n                \"version\": \"4.0.7\",\n                \"description\": \"This is a simple library to convert Dekatrian and Gregorian.\",\n                \"keywords\": [\n                    \"Vitortec.com\",\n                    \"converter\",\n                    \"date\",\n                    \"calendar\",\n                    \"dekatrian\",\n                    \"gregorian\"\n                ],\n                \"date\": \"2018-12-24T22:14:54.223Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/%40vitorteccom%2Fdekajs\",\n                    \"homepage\": \"https://github.com/vitorteccom/dekajs\",\n                    \"repository\": \"https://github.com/vitorteccom/dekajs\",\n                    \"bugs\": \"https://github.com/vitorteccom/dekajs/issues\"\n                },\n                \"publisher\": {\n                    \"username\": \"vitorteccom\",\n                    \"email\": \"contato@vitortec.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"vitorteccom\",\n                        \"email\": \"contato@vitortec.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6582405275077451,\n                \"detail\": {\n                    \"quality\": 0.985085336826455,\n                    \"popularity\": 0.03634272841401484,\n                    \"maintenance\": 0.9999856328997241\n                }\n            },\n            \"searchScore\": 0.00012444069\n        },\n        {\n            \"package\": {\n                \"name\": \"pretty-time\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.1.0\",\n                \"description\": \"Easily format the time from node.js `process.hrtime`. Works with timescales ranging from weeks to nanoseconds.\",\n                \"keywords\": [\n                    \"convert\",\n                    \"date\",\n                    \"format\",\n                    \"formatting\",\n                    \"hour\",\n                    \"hrtime\",\n                    \"micro\",\n                    \"milli\",\n                    \"minute\",\n                    \"nano\",\n                    \"nanosecond\",\n                    \"pretty\",\n                    \"second\",\n                    \"time\",\n                    \"week\"\n                ],\n                \"date\": \"2018-07-12T17:20:27.690Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/pretty-time\",\n                    \"homepage\": \"https://github.com/jonschlinkert/pretty-time\",\n                    \"repository\": \"https://github.com/jonschlinkert/pretty-time\",\n                    \"bugs\": \"https://github.com/jonschlinkert/pretty-time/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Jon Schlinkert\",\n                    \"url\": \"https://github.com/jonschlinkert\"\n                },\n                \"publisher\": {\n                    \"username\": \"jonschlinkert\",\n                    \"email\": \"github@sellside.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"doowb\",\n                        \"email\": \"brian.woodward@gmail.com\"\n                    },\n                    {\n                        \"username\": \"jonschlinkert\",\n                        \"email\": \"github@sellside.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.7379397074455074,\n                \"detail\": {\n                    \"quality\": 0.9332483302317781,\n                    \"popularity\": 0.30854109393618884,\n                    \"maintenance\": 0.9999309299951653\n                }\n            },\n            \"searchScore\": 0.00011995871\n        },\n        {\n            \"package\": {\n                \"name\": \"typeable\",\n                \"scope\": \"unscoped\",\n                \"version\": \"2.4.1\",\n                \"description\": \"A library for checking and casting types.\",\n                \"keywords\": [\n                    \"type\",\n                    \"types\",\n                    \"convert\",\n                    \"converter\",\n                    \"cast\",\n                    \"casting\",\n                    \"string\",\n                    \"boolean\",\n                    \"integer\",\n                    \"number\",\n                    \"date\",\n                    \"custom\"\n                ],\n                \"date\": \"2018-04-18T18:36:17.163Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/typeable\",\n                    \"homepage\": \"https://github.com/xpepermint/typeablejs#readme\",\n                    \"repository\": \"https://github.com/xpepermint/typeablejs\",\n                    \"bugs\": \"https://github.com/xpepermint/typeablejs/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Kristijan Sedlak\",\n                    \"url\": \"Xpepermint\"\n                },\n                \"publisher\": {\n                    \"username\": \"xpepermint\",\n                    \"email\": \"xpepermint@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"xpepermint\",\n                        \"email\": \"xpepermint@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6598039807751039,\n                \"detail\": {\n                    \"quality\": 0.9261155772667976,\n                    \"popularity\": 0.09140994884787657,\n                    \"maintenance\": 0.9999309299951653\n                }\n            },\n            \"searchScore\": 0.0001073728\n        },\n        {\n            \"package\": {\n                \"name\": \"deromanize\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.0.0\",\n                \"description\": \"Convert roman numerals to arabic numbers (useful for books, outlines, documentation, slide decks, etc)\",\n                \"keywords\": [\n                    \"arabic\",\n                    \"calculator\",\n                    \"chart\",\n                    \"clock\",\n                    \"conversion\",\n                    \"convert\",\n                    \"converter\",\n                    \"date\",\n                    \"dates\",\n                    \"deromanize\",\n                    \"integer\",\n                    \"math\",\n                    \"mean\",\n                    \"number\",\n                    \"numbers\",\n                    \"numeral\",\n                    \"numerals\",\n                    \"roman\",\n                    \"translation\",\n                    \"translator\",\n                    \"util\",\n                    \"utility\"\n                ],\n                \"date\": \"2017-04-23T05:39:06.586Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/deromanize\",\n                    \"homepage\": \"https://github.com/jonschlinkert/deromanize\",\n                    \"repository\": \"https://github.com/jonschlinkert/deromanize\",\n                    \"bugs\": \"https://github.com/jonschlinkert/deromanize/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Jon Schlinkert\",\n                    \"url\": \"https://github.com/jonschlinkert\"\n                },\n                \"publisher\": {\n                    \"username\": \"jonschlinkert\",\n                    \"email\": \"github@sellside.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"jonschlinkert\",\n                        \"email\": \"github@sellside.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6544627249031918,\n                \"detail\": {\n                    \"quality\": 0.9332483302317781,\n                    \"popularity\": 0.07013504736581563,\n                    \"maintenance\": 0.9998313121589226\n                }\n            },\n            \"searchScore\": 0.000065241766\n        },\n        {\n            \"package\": {\n                \"name\": \"moment-jalaali\",\n                \"scope\": \"unscoped\",\n                \"version\": \"0.8.3\",\n                \"description\": \"Jalaali (Jalali, Persian, Khorshidi, Shamsi) calendar system plugin for moment.js.\",\n                \"keywords\": [\n                    \"jalaali\",\n                    \"jalali\",\n                    \"persian\",\n                    \"khorshidi\",\n                    \"shamsi\",\n                    \"date\",\n                    \"calendar\",\n                    \"conversion\",\n                    \"convert\"\n                ],\n                \"date\": \"2018-12-01T13:32:46.160Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/moment-jalaali\",\n                    \"homepage\": \"https://github.com/behrang/moment-jalaali\",\n                    \"repository\": \"https://github.com/behrang/moment-jalaali\",\n                    \"bugs\": \"https://github.com/behrang/moment-jalaali/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Behrang Noruzi Niya\",\n                    \"email\": \"behrangn@gmail.com\",\n                    \"username\": \"behrang\"\n                },\n                \"publisher\": {\n                    \"username\": \"behrang\",\n                    \"email\": \"behrangn@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"alitaheri\",\n                        \"email\": \"ali.taheri.m@gmail.com\"\n                    },\n                    {\n                        \"username\": \"behrang\",\n                        \"email\": \"behrangn@gmail.com\"\n                    }\n                ]\n            },\n            \"flags\": {\n                \"unstable\": true\n            },\n            \"score\": {\n                \"final\": 0.6923747882698745,\n                \"detail\": {\n                    \"quality\": 0.8707215765478692,\n                    \"popularity\": 0.2484875217414242,\n                    \"maintenance\": 0.9833933791314726\n                }\n            },\n            \"searchScore\": 0.00004787408\n        },\n        {\n            \"package\": {\n                \"name\": \"@segment/isodate-traverse\",\n                \"scope\": \"segment\",\n                \"version\": \"1.1.0\",\n                \"description\": \"Traverse an object and convert all ISO strings into Dates.\",\n                \"keywords\": [\n                    \"ISO\",\n                    \"date\",\n                    \"datestring\",\n                    \"parse\",\n                    \"object\",\n                    \"convert\"\n                ],\n                \"date\": \"2017-09-06T20:17:05.726Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/%40segment%2Fisodate-traverse\",\n                    \"homepage\": \"https://github.com/segmentio/isodate-traverse#readme\",\n                    \"repository\": \"https://github.com/segmentio/isodate-traverse\",\n                    \"bugs\": \"https://github.com/segmentio/isodate-traverse/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Segment\",\n                    \"email\": \"friends@segment.com\"\n                },\n                \"publisher\": {\n                    \"username\": \"segment-admin\",\n                    \"email\": \"tools+npm@segment.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"jknight12882\",\n                        \"email\": \"jknight12882@gmail.com\"\n                    },\n                    {\n                        \"username\": \"esteladiaz\",\n                        \"email\": \"estela@diazela.com\"\n                    },\n                    {\n                        \"username\": \"calthomson\",\n                        \"email\": \"caledonia.thomson@segment.com\"\n                    },\n                    {\n                        \"username\": \"williamgrosset\",\n                        \"email\": \"william.grosset@segment.com\"\n                    },\n                    {\n                        \"username\": \"ktrinh\",\n                        \"email\": \"kelly.trinh@segment.com\"\n                    },\n                    {\n                        \"username\": \"davidbirdsong\",\n                        \"email\": \"david.birdsong@gmail.com\"\n                    },\n                    {\n                        \"username\": \"jaimal\",\n                        \"email\": \"jaimalsoni@gmail.com\"\n                    },\n                    {\n                        \"username\": \"creedarky\",\n                        \"email\": \"creedarky@gmail.com\"\n                    },\n                    {\n                        \"username\": \"fauzyy\",\n                        \"email\": \"barlo.marc@gmail.com\"\n                    },\n                    {\n                        \"username\": \"erikdw\",\n                        \"email\": \"edweathers@yahoo.com\"\n                    },\n                    {\n                        \"username\": \"tlsegment\",\n                        \"email\": \"thomas.lu@segment.com\"\n                    },\n                    {\n                        \"username\": \"manbearshark\",\n                        \"email\": \"igor.fcb+npm@gmail.com\"\n                    },\n                    {\n                        \"username\": \"aultimus\",\n                        \"email\": \"matthew.ault@gmail.com\"\n                    },\n                    {\n                        \"username\": \"eculver\",\n                        \"email\": \"e@eculver.io\"\n                    },\n                    {\n                        \"username\": \"nakulrathod\",\n                        \"email\": \"nakulrathod@gmail.com\"\n                    },\n                    {\n                        \"username\": \"falberini\",\n                        \"email\": \"f.alberini@gmail.com\"\n                    },\n                    {\n                        \"username\": \"sanscontext\",\n                        \"email\": \"lrubin@segment.io\"\n                    },\n                    {\n                        \"username\": \"brienne.mcnally\",\n                        \"email\": \"brienne.mcnally@segment.com\"\n                    },\n                    {\n                        \"username\": \"nhi-nguyen\",\n                        \"email\": \"nhi.nguyen@segment.com\"\n                    },\n                    {\n                        \"username\": \"hellooimkat\",\n                        \"email\": \"kateligad@gmail.com\"\n                    },\n                    {\n                        \"username\": \"uditmehta\",\n                        \"email\": \"udit@segment.com\"\n                    },\n                    {\n                        \"username\": \"joshwget\",\n                        \"email\": \"josh@curl.me\"\n                    },\n                    {\n                        \"username\": \"rarchana2001asu\",\n                        \"email\": \"archana@segment.com\"\n                    },\n                    {\n                        \"username\": \"segment-anastassia\",\n                        \"email\": \"anastassia@segment.com\"\n                    },\n                    {\n                        \"username\": \"jfmaggie\",\n                        \"email\": \"jfmaggie@gmail.com\"\n                    },\n                    {\n                        \"username\": \"williams-blake\",\n                        \"email\": \"blake@segment.com\"\n                    },\n                    {\n                        \"username\": \"gnijor\",\n                        \"email\": \"nijor22@gmail.com\"\n                    },\n                    {\n                        \"username\": \"jamesmcguinness\",\n                        \"email\": \"james.mcguinness@segment.com\"\n                    },\n                    {\n                        \"username\": \"monicadamborenea\",\n                        \"email\": \"monica@segment.com\"\n                    },\n                    {\n                        \"username\": \"lauramunozjimenez\",\n                        \"email\": \"laura.munoz@segment.com\"\n                    },\n                    {\n                        \"username\": \"parsa-segment\",\n                        \"email\": \"parsa@segment.com\"\n                    },\n                    {\n                        \"username\": \"bryanmikaelian\",\n                        \"email\": \"bryan.mikaelian@gmail.com\"\n                    },\n                    {\n                        \"username\": \"willallison\",\n                        \"email\": \"will.allison@segment.com\"\n                    },\n                    {\n                        \"username\": \"ynguyen\",\n                        \"email\": \"y.nguyen@segment.com\"\n                    },\n                    {\n                        \"username\": \"mshwery\",\n                        \"email\": \"mshwery@gmail.com\"\n                    },\n                    {\n                        \"username\": \"flaque\",\n                        \"email\": \"flaqueeau@gmail.com\"\n                    },\n                    {\n                        \"username\": \"gpsamson\",\n                        \"email\": \"gabriel.samson@segment.com\"\n                    },\n                    {\n                        \"username\": \"amillet89\",\n                        \"email\": \"alex@segment.io\"\n                    },\n                    {\n                        \"username\": \"av-segment\",\n                        \"email\": \"andrius@segment.com\"\n                    },\n                    {\n                        \"username\": \"fathyb\",\n                        \"email\": \"fathy.boundjadj@gmail.com\"\n                    },\n                    {\n                        \"username\": \"nucleartide\",\n                        \"email\": \"jasontu4@gmail.com\"\n                    },\n                    {\n                        \"username\": \"scruwys1\",\n                        \"email\": \"scott.cruwys@segment.com\"\n                    },\n                    {\n                        \"username\": \"boggsboggs\",\n                        \"email\": \"john.boggs@segment.com\"\n                    },\n                    {\n                        \"username\": \"calvinfo\",\n                        \"email\": \"calvin@calv.info\"\n                    },\n                    {\n                        \"username\": \"dfuentes\",\n                        \"email\": \"daniel.richard.fuentes@gmail.com\"\n                    },\n                    {\n                        \"username\": \"rowno\",\n                        \"email\": \"rowno@webspirited.com\"\n                    },\n                    {\n                        \"username\": \"illyay2017\",\n                        \"email\": \"illya.yanchuk@gmail.com\"\n                    },\n                    {\n                        \"username\": \"colinking\",\n                        \"email\": \"me@colinking.co\"\n                    },\n                    {\n                        \"username\": \"chenpengcheng\",\n                        \"email\": \"pengcheng.chen@gmail.com\"\n                    },\n                    {\n                        \"username\": \"segmentaimee\",\n                        \"email\": \"aimee@segment.com\"\n                    },\n                    {\n                        \"username\": \"eesegment\",\n                        \"email\": \"eric.ellett@segment.com\"\n                    },\n                    {\n                        \"username\": \"nzoschke\",\n                        \"email\": \"nzoschke@gmail.com\"\n                    },\n                    {\n                        \"username\": \"rlc4\",\n                        \"email\": \"rickyconnell@gmail.com\"\n                    },\n                    {\n                        \"username\": \"segment-ulysse\",\n                        \"email\": \"ulysse@segment.com\"\n                    },\n                    {\n                        \"username\": \"systemizer\",\n                        \"email\": \"robmcqn@gmail.com\"\n                    },\n                    {\n                        \"username\": \"jfarah\",\n                        \"email\": \"julio.farah@segment.com\"\n                    },\n                    {\n                        \"username\": \"segmentio\",\n                        \"email\": \"tools@segment.com\"\n                    },\n                    {\n                        \"username\": \"segment-admin\",\n                        \"email\": \"tools+npm@segment.com\"\n                    },\n                    {\n                        \"username\": \"tejasmanohar\",\n                        \"email\": \"me@tejas.io\"\n                    },\n                    {\n                        \"username\": \"dominicbarnes\",\n                        \"email\": \"dominic@dbarnes.info\"\n                    },\n                    {\n                        \"username\": \"yields\",\n                        \"email\": \"yields@icloud.com\"\n                    },\n                    {\n                        \"username\": \"ccnixon\",\n                        \"email\": \"chrisnxn@gmail.com\"\n                    },\n                    {\n                        \"username\": \"ivolo\",\n                        \"email\": \"ilya@segment.io\"\n                    },\n                    {\n                        \"username\": \"srthurman\",\n                        \"email\": \"srthurman@gmail.com\"\n                    },\n                    {\n                        \"username\": \"ladanazita\",\n                        \"email\": \"ladanazita@gmail.com\"\n                    },\n                    {\n                        \"username\": \"anoonan\",\n                        \"email\": \"amnoonann@gmail.com\"\n                    },\n                    {\n                        \"username\": \"peripheral\",\n                        \"email\": \"peter.h.richmond@gmail.com\"\n                    },\n                    {\n                        \"username\": \"achille-roussel\",\n                        \"email\": \"achille.roussel@gmail.com\"\n                    },\n                    {\n                        \"username\": \"nettofarah\",\n                        \"email\": \"nettofarah@gmail.com\"\n                    },\n                    {\n                        \"username\": \"maxence-charriere\",\n                        \"email\": \"charriere@outlook.com\"\n                    },\n                    {\n                        \"username\": \"joeybloggs\",\n                        \"email\": \"dean@segment.com\"\n                    },\n                    {\n                        \"username\": \"jeroenransijn\",\n                        \"email\": \"jssrdesign@gmail.com\"\n                    },\n                    {\n                        \"username\": \"tamarrow\",\n                        \"email\": \"tamarrow@gmail.com\"\n                    },\n                    {\n                        \"username\": \"albert.segment\",\n                        \"email\": \"albert@segment.com\"\n                    },\n                    {\n                        \"username\": \"sperand-io\",\n                        \"email\": \"chris@sperand.io\"\n                    },\n                    {\n                        \"username\": \"segment-danielstjules\",\n                        \"email\": \"danielst.jules@segment.com\"\n                    },\n                    {\n                        \"username\": \"jlee9595\",\n                        \"email\": \"justin@segment.com\"\n                    },\n                    {\n                        \"username\": \"notfelineit\",\n                        \"email\": \"notfelineit@gmail.com\"\n                    },\n                    {\n                        \"username\": \"n2parko\",\n                        \"email\": \"kevin@segment.com\"\n                    },\n                    {\n                        \"username\": \"segment-andy-yeo\",\n                        \"email\": \"andy.yeo@segment.com\"\n                    },\n                    {\n                        \"username\": \"erickimsegment\",\n                        \"email\": \"eric@segment.com\"\n                    },\n                    {\n                        \"username\": \"sahilp\",\n                        \"email\": \"sahil@segment.com\"\n                    },\n                    {\n                        \"username\": \"vdemedes\",\n                        \"email\": \"vdemedes@gmail.com\"\n                    },\n                    {\n                        \"username\": \"emilio-gomez-lavin\",\n                        \"email\": \"emilio@segment.com\"\n                    },\n                    {\n                        \"username\": \"dscrobonia\",\n                        \"email\": \"davidscrobonia@gmail.com\"\n                    },\n                    {\n                        \"username\": \"f2prateek\",\n                        \"email\": \"f2prateek@gmail.com\"\n                    },\n                    {\n                        \"username\": \"andreiko_ru\",\n                        \"email\": \"mail@andreiko.ru\"\n                    },\n                    {\n                        \"username\": \"xagos\",\n                        \"email\": \"xavier.agostini@mail.mcgill.ca\"\n                    },\n                    {\n                        \"username\": \"emily.luckette\",\n                        \"email\": \"emily@segment.com\"\n                    },\n                    {\n                        \"username\": \"atrivedi1\",\n                        \"email\": \"akash@segment.com\"\n                    },\n                    {\n                        \"username\": \"carlosmecha\",\n                        \"email\": \"mecha.carlos@gmail.com\"\n                    },\n                    {\n                        \"username\": \"leifdreizler\",\n                        \"email\": \"leifdreizler@gmail.com\"\n                    },\n                    {\n                        \"username\": \"fforres\",\n                        \"email\": \"felipe.torressepulveda@gmail.com\"\n                    },\n                    {\n                        \"username\": \"segment-cyammine\",\n                        \"email\": \"chris.yammine@segment.com\"\n                    },\n                    {\n                        \"username\": \"rpaul80\",\n                        \"email\": \"rpaul80@gmail.com\"\n                    },\n                    {\n                        \"username\": \"alan-segment\",\n                        \"email\": \"alan@segment.com\"\n                    },\n                    {\n                        \"username\": \"tyson_segment\",\n                        \"email\": \"tyson@segment.com\"\n                    },\n                    {\n                        \"username\": \"bgamwell\",\n                        \"email\": \"brennan@segment.com\"\n                    },\n                    {\n                        \"username\": \"jfabre-segment\",\n                        \"email\": \"julien@segment.com\"\n                    },\n                    {\n                        \"username\": \"msanterre\",\n                        \"email\": \"mooxeh@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6943734412895184,\n                \"detail\": {\n                    \"quality\": 0.9360499241927381,\n                    \"popularity\": 0.18172396280715758,\n                    \"maintenance\": 0.9998716487119768\n                }\n            },\n            \"searchScore\": 0.0000466133\n        },\n        {\n            \"package\": {\n                \"name\": \"@segment/convert-dates\",\n                \"scope\": \"segment\",\n                \"version\": \"1.1.0\",\n                \"description\": \"Convert all Date instances in an object.\",\n                \"keywords\": [\n                    \"date\"\n                ],\n                \"date\": \"2017-10-19T20:42:12.573Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/%40segment%2Fconvert-dates\",\n                    \"homepage\": \"https://github.com/segmentio/convert-dates#readme\",\n                    \"repository\": \"https://github.com/segmentio/convert-dates\",\n                    \"bugs\": \"https://github.com/segmentio/convert-dates/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Segment\",\n                    \"email\": \"friends@segment.com\"\n                },\n                \"publisher\": {\n                    \"username\": \"segment-admin\",\n                    \"email\": \"tools+npm@segment.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"jknight12882\",\n                        \"email\": \"jknight12882@gmail.com\"\n                    },\n                    {\n                        \"username\": \"esteladiaz\",\n                        \"email\": \"estela@diazela.com\"\n                    },\n                    {\n                        \"username\": \"calthomson\",\n                        \"email\": \"caledonia.thomson@segment.com\"\n                    },\n                    {\n                        \"username\": \"williamgrosset\",\n                        \"email\": \"william.grosset@segment.com\"\n                    },\n                    {\n                        \"username\": \"ktrinh\",\n                        \"email\": \"kelly.trinh@segment.com\"\n                    },\n                    {\n                        \"username\": \"davidbirdsong\",\n                        \"email\": \"david.birdsong@gmail.com\"\n                    },\n                    {\n                        \"username\": \"jaimal\",\n                        \"email\": \"jaimalsoni@gmail.com\"\n                    },\n                    {\n                        \"username\": \"creedarky\",\n                        \"email\": \"creedarky@gmail.com\"\n                    },\n                    {\n                        \"username\": \"fauzyy\",\n                        \"email\": \"barlo.marc@gmail.com\"\n                    },\n                    {\n                        \"username\": \"erikdw\",\n                        \"email\": \"edweathers@yahoo.com\"\n                    },\n                    {\n                        \"username\": \"tlsegment\",\n                        \"email\": \"thomas.lu@segment.com\"\n                    },\n                    {\n                        \"username\": \"manbearshark\",\n                        \"email\": \"igor.fcb+npm@gmail.com\"\n                    },\n                    {\n                        \"username\": \"aultimus\",\n                        \"email\": \"matthew.ault@gmail.com\"\n                    },\n                    {\n                        \"username\": \"eculver\",\n                        \"email\": \"e@eculver.io\"\n                    },\n                    {\n                        \"username\": \"nakulrathod\",\n                        \"email\": \"nakulrathod@gmail.com\"\n                    },\n                    {\n                        \"username\": \"falberini\",\n                        \"email\": \"f.alberini@gmail.com\"\n                    },\n                    {\n                        \"username\": \"sanscontext\",\n                        \"email\": \"lrubin@segment.io\"\n                    },\n                    {\n                        \"username\": \"brienne.mcnally\",\n                        \"email\": \"brienne.mcnally@segment.com\"\n                    },\n                    {\n                        \"username\": \"nhi-nguyen\",\n                        \"email\": \"nhi.nguyen@segment.com\"\n                    },\n                    {\n                        \"username\": \"hellooimkat\",\n                        \"email\": \"kateligad@gmail.com\"\n                    },\n                    {\n                        \"username\": \"uditmehta\",\n                        \"email\": \"udit@segment.com\"\n                    },\n                    {\n                        \"username\": \"joshwget\",\n                        \"email\": \"josh@curl.me\"\n                    },\n                    {\n                        \"username\": \"rarchana2001asu\",\n                        \"email\": \"archana@segment.com\"\n                    },\n                    {\n                        \"username\": \"segment-anastassia\",\n                        \"email\": \"anastassia@segment.com\"\n                    },\n                    {\n                        \"username\": \"jfmaggie\",\n                        \"email\": \"jfmaggie@gmail.com\"\n                    },\n                    {\n                        \"username\": \"williams-blake\",\n                        \"email\": \"blake@segment.com\"\n                    },\n                    {\n                        \"username\": \"gnijor\",\n                        \"email\": \"nijor22@gmail.com\"\n                    },\n                    {\n                        \"username\": \"jamesmcguinness\",\n                        \"email\": \"james.mcguinness@segment.com\"\n                    },\n                    {\n                        \"username\": \"monicadamborenea\",\n                        \"email\": \"monica@segment.com\"\n                    },\n                    {\n                        \"username\": \"lauramunozjimenez\",\n                        \"email\": \"laura.munoz@segment.com\"\n                    },\n                    {\n                        \"username\": \"parsa-segment\",\n                        \"email\": \"parsa@segment.com\"\n                    },\n                    {\n                        \"username\": \"bryanmikaelian\",\n                        \"email\": \"bryan.mikaelian@gmail.com\"\n                    },\n                    {\n                        \"username\": \"willallison\",\n                        \"email\": \"will.allison@segment.com\"\n                    },\n                    {\n                        \"username\": \"ynguyen\",\n                        \"email\": \"y.nguyen@segment.com\"\n                    },\n                    {\n                        \"username\": \"mshwery\",\n                        \"email\": \"mshwery@gmail.com\"\n                    },\n                    {\n                        \"username\": \"flaque\",\n                        \"email\": \"flaqueeau@gmail.com\"\n                    },\n                    {\n                        \"username\": \"gpsamson\",\n                        \"email\": \"gabriel.samson@segment.com\"\n                    },\n                    {\n                        \"username\": \"amillet89\",\n                        \"email\": \"alex@segment.io\"\n                    },\n                    {\n                        \"username\": \"av-segment\",\n                        \"email\": \"andrius@segment.com\"\n                    },\n                    {\n                        \"username\": \"fathyb\",\n                        \"email\": \"fathy.boundjadj@gmail.com\"\n                    },\n                    {\n                        \"username\": \"nucleartide\",\n                        \"email\": \"jasontu4@gmail.com\"\n                    },\n                    {\n                        \"username\": \"scruwys1\",\n                        \"email\": \"scott.cruwys@segment.com\"\n                    },\n                    {\n                        \"username\": \"boggsboggs\",\n                        \"email\": \"john.boggs@segment.com\"\n                    },\n                    {\n                        \"username\": \"calvinfo\",\n                        \"email\": \"calvin@calv.info\"\n                    },\n                    {\n                        \"username\": \"dfuentes\",\n                        \"email\": \"daniel.richard.fuentes@gmail.com\"\n                    },\n                    {\n                        \"username\": \"rowno\",\n                        \"email\": \"rowno@webspirited.com\"\n                    },\n                    {\n                        \"username\": \"illyay2017\",\n                        \"email\": \"illya.yanchuk@gmail.com\"\n                    },\n                    {\n                        \"username\": \"colinking\",\n                        \"email\": \"me@colinking.co\"\n                    },\n                    {\n                        \"username\": \"chenpengcheng\",\n                        \"email\": \"pengcheng.chen@gmail.com\"\n                    },\n                    {\n                        \"username\": \"segmentaimee\",\n                        \"email\": \"aimee@segment.com\"\n                    },\n                    {\n                        \"username\": \"eesegment\",\n                        \"email\": \"eric.ellett@segment.com\"\n                    },\n                    {\n                        \"username\": \"nzoschke\",\n                        \"email\": \"nzoschke@gmail.com\"\n                    },\n                    {\n                        \"username\": \"rlc4\",\n                        \"email\": \"rickyconnell@gmail.com\"\n                    },\n                    {\n                        \"username\": \"segment-ulysse\",\n                        \"email\": \"ulysse@segment.com\"\n                    },\n                    {\n                        \"username\": \"systemizer\",\n                        \"email\": \"robmcqn@gmail.com\"\n                    },\n                    {\n                        \"username\": \"jfarah\",\n                        \"email\": \"julio.farah@segment.com\"\n                    },\n                    {\n                        \"username\": \"segmentio\",\n                        \"email\": \"tools@segment.com\"\n                    },\n                    {\n                        \"username\": \"segment-admin\",\n                        \"email\": \"tools+npm@segment.com\"\n                    },\n                    {\n                        \"username\": \"tejasmanohar\",\n                        \"email\": \"me@tejas.io\"\n                    },\n                    {\n                        \"username\": \"dominicbarnes\",\n                        \"email\": \"dominic@dbarnes.info\"\n                    },\n                    {\n                        \"username\": \"yields\",\n                        \"email\": \"yields@icloud.com\"\n                    },\n                    {\n                        \"username\": \"ccnixon\",\n                        \"email\": \"chrisnxn@gmail.com\"\n                    },\n                    {\n                        \"username\": \"ivolo\",\n                        \"email\": \"ilya@segment.io\"\n                    },\n                    {\n                        \"username\": \"srthurman\",\n                        \"email\": \"srthurman@gmail.com\"\n                    },\n                    {\n                        \"username\": \"ladanazita\",\n                        \"email\": \"ladanazita@gmail.com\"\n                    },\n                    {\n                        \"username\": \"anoonan\",\n                        \"email\": \"amnoonann@gmail.com\"\n                    },\n                    {\n                        \"username\": \"peripheral\",\n                        \"email\": \"peter.h.richmond@gmail.com\"\n                    },\n                    {\n                        \"username\": \"achille-roussel\",\n                        \"email\": \"achille.roussel@gmail.com\"\n                    },\n                    {\n                        \"username\": \"nettofarah\",\n                        \"email\": \"nettofarah@gmail.com\"\n                    },\n                    {\n                        \"username\": \"maxence-charriere\",\n                        \"email\": \"charriere@outlook.com\"\n                    },\n                    {\n                        \"username\": \"joeybloggs\",\n                        \"email\": \"dean@segment.com\"\n                    },\n                    {\n                        \"username\": \"jeroenransijn\",\n                        \"email\": \"jssrdesign@gmail.com\"\n                    },\n                    {\n                        \"username\": \"tamarrow\",\n                        \"email\": \"tamarrow@gmail.com\"\n                    },\n                    {\n                        \"username\": \"albert.segment\",\n                        \"email\": \"albert@segment.com\"\n                    },\n                    {\n                        \"username\": \"sperand-io\",\n                        \"email\": \"chris@sperand.io\"\n                    },\n                    {\n                        \"username\": \"segment-danielstjules\",\n                        \"email\": \"danielst.jules@segment.com\"\n                    },\n                    {\n                        \"username\": \"jlee9595\",\n                        \"email\": \"justin@segment.com\"\n                    },\n                    {\n                        \"username\": \"notfelineit\",\n                        \"email\": \"notfelineit@gmail.com\"\n                    },\n                    {\n                        \"username\": \"n2parko\",\n                        \"email\": \"kevin@segment.com\"\n                    },\n                    {\n                        \"username\": \"segment-andy-yeo\",\n                        \"email\": \"andy.yeo@segment.com\"\n                    },\n                    {\n                        \"username\": \"erickimsegment\",\n                        \"email\": \"eric@segment.com\"\n                    },\n                    {\n                        \"username\": \"sahilp\",\n                        \"email\": \"sahil@segment.com\"\n                    },\n                    {\n                        \"username\": \"vdemedes\",\n                        \"email\": \"vdemedes@gmail.com\"\n                    },\n                    {\n                        \"username\": \"emilio-gomez-lavin\",\n                        \"email\": \"emilio@segment.com\"\n                    },\n                    {\n                        \"username\": \"dscrobonia\",\n                        \"email\": \"davidscrobonia@gmail.com\"\n                    },\n                    {\n                        \"username\": \"f2prateek\",\n                        \"email\": \"f2prateek@gmail.com\"\n                    },\n                    {\n                        \"username\": \"andreiko_ru\",\n                        \"email\": \"mail@andreiko.ru\"\n                    },\n                    {\n                        \"username\": \"xagos\",\n                        \"email\": \"xavier.agostini@mail.mcgill.ca\"\n                    },\n                    {\n                        \"username\": \"emily.luckette\",\n                        \"email\": \"emily@segment.com\"\n                    },\n                    {\n                        \"username\": \"atrivedi1\",\n                        \"email\": \"akash@segment.com\"\n                    },\n                    {\n                        \"username\": \"carlosmecha\",\n                        \"email\": \"mecha.carlos@gmail.com\"\n                    },\n                    {\n                        \"username\": \"leifdreizler\",\n                        \"email\": \"leifdreizler@gmail.com\"\n                    },\n                    {\n                        \"username\": \"fforres\",\n                        \"email\": \"felipe.torressepulveda@gmail.com\"\n                    },\n                    {\n                        \"username\": \"segment-cyammine\",\n                        \"email\": \"chris.yammine@segment.com\"\n                    },\n                    {\n                        \"username\": \"rpaul80\",\n                        \"email\": \"rpaul80@gmail.com\"\n                    },\n                    {\n                        \"username\": \"alan-segment\",\n                        \"email\": \"alan@segment.com\"\n                    },\n                    {\n                        \"username\": \"tyson_segment\",\n                        \"email\": \"tyson@segment.com\"\n                    },\n                    {\n                        \"username\": \"bgamwell\",\n                        \"email\": \"brennan@segment.com\"\n                    },\n                    {\n                        \"username\": \"jfabre-segment\",\n                        \"email\": \"julien@segment.com\"\n                    },\n                    {\n                        \"username\": \"msanterre\",\n                        \"email\": \"mooxeh@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6643492823353749,\n                \"detail\": {\n                    \"quality\": 0.9360499241927381,\n                    \"popularity\": 0.09588137022641603,\n                    \"maintenance\": 0.9999309299951653\n                }\n            },\n            \"searchScore\": 0.000045754103\n        },\n        {\n            \"package\": {\n                \"name\": \"date-to-words\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.0.2\",\n                \"description\": \"Converts date to its spoken representation\",\n                \"keywords\": [\n                    \"converter\",\n                    \"date\",\n                    \"en\",\n                    \"english\",\n                    \"string\",\n                    \"stringify\",\n                    \"word\"\n                ],\n                \"date\": \"2015-08-05T10:29:28.505Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/date-to-words\",\n                    \"homepage\": \"https://github.com/gxoptg/date-to-words#readme\",\n                    \"repository\": \"https://github.com/gxoptg/date-to-words\",\n                    \"bugs\": \"https://github.com/gxoptg/date-to-words/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Ivan Akulov\",\n                    \"email\": \"gxoptg@gmail.com\",\n                    \"url\": \"http://ivanakulov.name\",\n                    \"username\": \"iamakulov\"\n                },\n                \"publisher\": {\n                    \"username\": \"gxoptg\",\n                    \"email\": \"gxoptg@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"iamakulov\",\n                        \"email\": \"gxoptg@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.5919596878362454,\n                \"detail\": {\n                    \"quality\": 0.7861194889741348,\n                    \"popularity\": 0.01766537682394886,\n                    \"maintenance\": 0.9998313121589226\n                }\n            },\n            \"searchScore\": 0.000038295628\n        },\n        {\n            \"package\": {\n                \"name\": \"timezone-support\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.8.1\",\n                \"description\": \"Lightweight time zone support for your applications or other date libraries.\",\n                \"keywords\": [\n                    \"timezone\",\n                    \"tzdata\",\n                    \"convert\",\n                    \"offset\",\n                    \"date\",\n                    \"time\"\n                ],\n                \"date\": \"2018-11-27T07:37:43.836Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/timezone-support\",\n                    \"homepage\": \"https://github.com/prantlf/timezone-support#readme\",\n                    \"repository\": \"https://github.com/prantlf/timezone-support\",\n                    \"bugs\": \"https://github.com/prantlf/timezone-support/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Ferdinand Prantl\",\n                    \"email\": \"prantlf@gmail.com\",\n                    \"url\": \"http://prantl.tk\",\n                    \"username\": \"prantlf\"\n                },\n                \"publisher\": {\n                    \"username\": \"prantlf\",\n                    \"email\": \"prantlf@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"prantlf\",\n                        \"email\": \"prantlf@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6896045169317608,\n                \"detail\": {\n                    \"quality\": 0.989552247563478,\n                    \"popularity\": 0.12215265636937105,\n                    \"maintenance\": 0.9999583226669646\n                }\n            },\n            \"searchScore\": 0.000033605065\n        },\n        {\n            \"package\": {\n                \"name\": \"@fav/type.to-date\",\n                \"scope\": \"fav\",\n                \"version\": \"1.0.2\",\n                \"description\": \"Convert a string in various date format to a date object.\",\n                \"keywords\": [\n                    \"date\",\n                    \"rfc2822\",\n                    \"rfc3339\",\n                    \"iso8601\",\n                    \"to-date\",\n                    \"type\",\n                    \"datatype\",\n                    \"fav\"\n                ],\n                \"date\": \"2018-06-02T04:26:45.684Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/%40fav%2Ftype.to-date\",\n                    \"homepage\": \"https://github.com/sttk/fav-type.to-date#readme\",\n                    \"repository\": \"https://github.com/sttk/fav-type.to-date\",\n                    \"bugs\": \"https://github.com/sttk/fav-type.to-date/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Takayuki Sato\"\n                },\n                \"publisher\": {\n                    \"username\": \"fav\",\n                    \"email\": \"xslet.g@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"sttk\",\n                        \"email\": \"sttk.xslet@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6626323849034624,\n                \"detail\": {\n                    \"quality\": 0.9883640875112195,\n                    \"popularity\": 0.046234855412781994,\n                    \"maintenance\": 0.9998313121589226\n                }\n            },\n            \"searchScore\": 0.000023281147\n        },\n        {\n            \"package\": {\n                \"name\": \"date-from-timestamp\",\n                \"scope\": \"unscoped\",\n                \"version\": \"2.0.1\",\n                \"description\": \"Date on format dd.mm.yyyy from timestamp\",\n                \"keywords\": [\n                    \"date\",\n                    \"convert\",\n                    \"tfk\",\n                    \"Telemark fylkeskommune\"\n                ],\n                \"date\": \"2019-01-24T06:14:34.627Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/date-from-timestamp\",\n                    \"homepage\": \"https://github.com/telemark/date-from-timestamp#readme\",\n                    \"repository\": \"https://github.com/telemark/date-from-timestamp\",\n                    \"bugs\": \"https://github.com/telemark/date-from-timestamp/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Geir Gåsodden\",\n                    \"email\": \"geir.gasodden@pythonia.no\",\n                    \"url\": \"https://github.com/zrrrzzt\",\n                    \"username\": \"zrrrzzt\"\n                },\n                \"publisher\": {\n                    \"username\": \"zrrrzzt\",\n                    \"email\": \"geir.gasodden@pythonia.no\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"cybermelmac\",\n                        \"email\": \"pthorsen@online.no\"\n                    },\n                    {\n                        \"username\": \"maccyber\",\n                        \"email\": \"jonas.enge@gmail.com\"\n                    },\n                    {\n                        \"username\": \"telemark\",\n                        \"email\": \"it.info@t-fk.no\"\n                    },\n                    {\n                        \"username\": \"zrrrzzt\",\n                        \"email\": \"geir.gasodden@pythonia.no\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6551942536252594,\n                \"detail\": {\n                    \"quality\": 0.974924753181054,\n                    \"popularity\": 0.03640286335038672,\n                    \"maintenance\": 0.9999309299951653\n                }\n            },\n            \"searchScore\": 0.000022205428\n        },\n        {\n            \"package\": {\n                \"name\": \"qc-to_date\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.0.2\",\n                \"description\": \"A simple JavaScript utility to convert various value to a Date.\",\n                \"keywords\": [\n                    \"coerce\",\n                    \"convert\",\n                    \"conversion\",\n                    \"date\",\n                    \"javascript\",\n                    \"toDate\",\n                    \"toDateOrNull\",\n                    \"typescript\",\n                    \"utility\"\n                ],\n                \"date\": \"2017-06-02T15:54:51.008Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/qc-to_date\",\n                    \"homepage\": \"https://github.com/hypersoftllc/qc-to_date#readme\",\n                    \"repository\": \"https://github.com/hypersoftllc/qc-to_date\",\n                    \"bugs\": \"https://github.com/hypersoftllc/qc-to_date/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Danny Hurlburt\",\n                    \"url\": \"https://github.com/dhurlburtusa\"\n                },\n                \"publisher\": {\n                    \"username\": \"hypersoftllc\",\n                    \"email\": \"npm4dhurlburt@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"hypersoftllc\",\n                        \"email\": \"npm4dhurlburt@gmail.com\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6557324270742386,\n                \"detail\": {\n                    \"quality\": 0.9727900896502096,\n                    \"popularity\": 0.03977021337390817,\n                    \"maintenance\": 0.9999309299951653\n                }\n            },\n            \"searchScore\": 0.000020447873\n        },\n        {\n            \"package\": {\n                \"name\": \"julian-date\",\n                \"scope\": \"unscoped\",\n                \"version\": \"1.0.1\",\n                \"description\": \"Convert javascript dates to julian dates and days\",\n                \"keywords\": [\n                    \"julian\",\n                    \"date\",\n                    \"gregorian\",\n                    \"convert\"\n                ],\n                \"date\": \"2015-03-08T03:19:27.143Z\",\n                \"links\": {\n                    \"npm\": \"https://www.npmjs.com/package/julian-date\",\n                    \"homepage\": \"https://github.com/jonhester/julian-date\",\n                    \"repository\": \"https://github.com/jonhester/julian-date\",\n                    \"bugs\": \"https://github.com/jonhester/julian-date/issues\"\n                },\n                \"author\": {\n                    \"name\": \"Jon Hester\"\n                },\n                \"publisher\": {\n                    \"username\": \"jonhester\",\n                    \"email\": \"jon.d.hester@gmail.com\"\n                },\n                \"maintainers\": [\n                    {\n                        \"username\": \"jonhester\",\n                        \"email\": \"jon@hester.io\"\n                    }\n                ]\n            },\n            \"score\": {\n                \"final\": 0.6416060095301463,\n                \"detail\": {\n                    \"quality\": 0.9218995865341185,\n                    \"popularity\": 0.04302945163315153,\n                    \"maintenance\": 0.9999309299951653\n                }\n            },\n            \"searchScore\": 0.00002015305\n        }\n    ],\n    \"total\": 254,\n    \"time\": \"Thu Jan 24 2019 13:15:00 GMT+0000 (UTC)\"\n}"
+				}
+			]
+		},
+		{
+			"name": "fetch comments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "082b669a-0dcc-480c-a8ec-c09ab0522a25",
+						"exec": [
+							"let repoData = pm.environment.get(\"repoData\");",
+							"let counter = pm.environment.get(\"counter\");",
+							"let repoCount = pm.environment.get(\"repoCount\");",
+							"",
+							"// tests",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json; ",
+							"});",
+							"",
+							"counter = parseInt(counter); //counter to store the index",
+							"",
+							"repoData = JSON.parse(repoData);",
+							"console.log(repoData);",
+							"",
+							"pm.environment.set(\"userName\",repoData[counter].userName);",
+							"pm.environment.set(\"repoName\",repoData[counter].repoName);",
+							"",
+							"counter++;",
+							"",
+							"if(counter == repoCount){",
+							"    postman.setNextRequest(null);",
+							"}",
+							"else{",
+							"    postman.setNextRequest(\"calculate sentiment\");",
+							"}",
+							"pm.environment.set(\"counter\",counter);",
+							"",
+							"if(counter!=repoCount){",
+							"",
+							"    let response = pm.response.json();",
+							"",
+							"    let comments = []; //an array to store comments",
+							"",
+							"    if(response.length === \"null\"){",
+							"        response.forEach(function(item){",
+							"                comments.push(item.body);",
+							"            });",
+							"    }",
+							"",
+							"    if(comments.length === 0){",
+							"        sentimentText = \" \";",
+							"    }",
+							"    else{",
+							"        sentimentText = comments.toString();",
+							"        sentimentText = sentimentText.replace(/[`~!@#$%^&*()_|+\\-=?;:'\",.<>\\{\\}\\[\\]\\\\\\/]/gi, '');",
+							"        pm.environment.set(\"sentimentText\", sentimentText);",
+							"    }",
+							"}",
+							"",
+							"if(counter>=repoCount){",
+							"   postman.setNextRequest(\"push to slack\");",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "d12c2e00-9410-411b-830b-21879f0d2191",
+						"exec": [
+							"let repoCount = pm.environment.get(\"repoCount\");  //number of repositories",
+							"",
+							"if(repoCount>0){",
+							"    postman.setNextRequest(\"fetch comments\");",
+							"}",
+							"else{",
+							"    postman.setNextRequest(\"calculate sentiment\");",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "5eedc799c9b65a81181531a85487c0484f93f92c",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "queryParams",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.github.com/repos/{{userName}}/{{repoName}}/comments",
+					"protocol": "https",
+					"host": [
+						"api",
+						"github",
+						"com"
+					],
+					"path": [
+						"repos",
+						"{{userName}}",
+						"{{repoName}}",
+						"comments"
+					]
+				},
+				"description": "Fetching *comments* for each repositories using [GitHub API](https://api.github.com/).\n\n\n- **{{repoName}}** : Name of the GitHub repository\n- **{{userName}}** : GitHub username for the given repository"
+			},
+			"response": []
+		},
+		{
+			"name": "calculate sentiment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aafd231d-ee9c-484c-8d39-7780788b573c",
+						"exec": [
+							"let popularRepos = pm.environment.get(\"popularRepos\");",
+							"",
+							"let userName = pm.environment.get(\"userName\");",
+							"let repoName = pm.environment.get(\"repoName\");",
+							"let counter = pm.environment.get(\"counter\");",
+							"let repoCount = pm.environment.get(\"repoCount\");",
+							"",
+							"let sentimentValue = pm.response.json().sentiment;",
+							"",
+							"// tests",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"response must be valid and have a body\", function () {",
+							"     pm.response.to.be.ok; ",
+							"     pm.response.to.be.withBody;",
+							"     pm.response.to.be.json; ",
+							"});",
+							"",
+							"console.log(popularRepos);",
+							"",
+							"if(popularRepos === \"\"){",
+							"    console.log(\"empty\");",
+							"    let repoList = [];",
+							"    repoList.push({",
+							"        \"userName\" : userName,",
+							"        \"repoName\" : repoName,",
+							"        \"sentimentValue\" : sentimentValue,",
+							"        ",
+							"     });",
+							"    pm.environment.set(\"popularRepos\",JSON.stringify(repoList));",
+							"}",
+							"else{",
+							"    popularRepos = JSON.parse(popularRepos);",
+							"    popularRepos.push({",
+							"        \"userName\" : userName,",
+							"        \"repoName\" : repoName,",
+							"        \"sentimentValue\" : sentimentValue",
+							"    });",
+							"    pm.environment.set(\"popularRepos\",JSON.stringify(popularRepos));",
+							"}",
+							"",
+							"if(counter<=repoCount){",
+							"    postman.setNextRequest(\"fetch comments\");",
+							"}",
+							"else{",
+							"    postman.setNextRequest(\"push to slack\");",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "7e1d3cf1-6b1f-49d2-86ba-462dd7fab3b8",
+						"exec": [
+							"console.log(\"sentiment\");",
+							"",
+							"let sentimentText = pm.environment.get(\"sentimentText\"); // GitHub comments for analyzing sentiment on it",
+							"",
+							"if(sentimentText === \"\"){",
+							"    sentimentText = \"neutral\";",
+							"    pm.environment.set(\"sentimentText\",sentimentText);",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://apis.paralleldots.com/v3/sentiment?text={{sentimentText}}&api_key={{apiKey}}",
+					"protocol": "https",
+					"host": [
+						"apis",
+						"paralleldots",
+						"com"
+					],
+					"path": [
+						"v3",
+						"sentiment"
+					],
+					"query": [
+						{
+							"key": "text",
+							"value": "{{sentimentText}}",
+							"description": "comments of GitHub repos"
+						},
+						{
+							"key": "api_key",
+							"value": "{{apiKey}}",
+							"description": "API key for Parallel Dots"
+						}
+					]
+				},
+				"description": "Calculating sentiment using [ParallelDots API](https://www.paralleldots.com) for the comments of given GitHub repository."
+			},
+			"response": [
+				{
+					"name": "calculate sentiment",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://apis.paralleldots.com/v3/sentiment?text={{sentimentText}}&api_key={{apiKey}}",
+							"protocol": "https",
+							"host": [
+								"apis",
+								"paralleldots",
+								"com"
+							],
+							"path": [
+								"v3",
+								"sentiment"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "{{sentimentText}}",
+									"description": "comments of GitHub repos"
+								},
+								{
+									"key": "api_key",
+									"value": "{{apiKey}}",
+									"description": "API key for Parallel Dots"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Thu, 24 Jan 2019 13:17:37 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "102"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "access-control-allow-origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"sentiment\": \"positive\",\n    \"probabilities\": {\n        \"negative\": 0.03,\n        \"neutral\": 0.101,\n        \"positive\": 0.869\n    },\n    \"code\": 200\n}"
+				}
+			]
+		},
+		{
+			"name": "push to slack",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a6a84c25-12cf-4009-842e-10b424b4d9ba",
+						"exec": [
+							"let popularRepos = pm.environment.get(\"popularRepos\");",
+							"",
+							"popularRepos = JSON.parse(popularRepos);",
+							"",
+							"let repoLinks = [];",
+							"popularRepos.forEach(function(data) {",
+							"    let repoUrl = \"https://github.com/\"+data.userName+\"/\"+data.repoName;",
+							"    if(data.sentimentValue == \"negative\"){",
+							"        repoLinks.push({",
+							"                    \"name\": \"github repo\",",
+							"                    \"text\": data.repoName,",
+							"                    \"type\": \"button\",",
+							"                    \"value\": \"Click to view it on GitHub\",",
+							"                    \"style\":\"danger\",",
+							"                    \"url\": repoUrl",
+							"    });",
+							"    }",
+							"    repoLinks.push({",
+							"                    \"name\": \"github repo\",",
+							"                    \"text\": data.repoName,",
+							"                    \"type\": \"button\",",
+							"                    \"value\": \"Click to view it on GitHub\",",
+							"                    \"url\": repoUrl",
+							"    });",
+							"});",
+							"",
+							"pm.variables.set(\"repoLinks\",JSON.stringify(repoLinks));",
+							"",
+							"//template string to pass on body of slack webhook",
+							"",
+							"let tempBody =  {",
+							"    \"text\": \"Here, are the results!\",",
+							"    \"attachments\": [",
+							"        {",
+							"            \"text\": \"Find the Popular Repositories here!\",",
+							"            \"fallback\": \"Can't find the repo\",",
+							"            \"callback_id\": \"vinitshahdeo\",",
+							"            \"color\": \"#3AA3E3\",",
+							"            \"attachment_type\": \"default\",",
+							"            \"actions\": repoLinks",
+							"        }",
+							"    ]",
+							"};",
+							"pm.variables.set('tempBody', JSON.stringify(tempBody))"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "5e7d2065-f53a-4f61-ae9a-3e0ea8279099",
+						"exec": [
+							"let repoLinks = pm.variables.get(\"repoLinks\");",
+							"let finalMessage = pm.environment.get(\"finalMessage\");",
+							"",
+							"// tests",
+							"pm.test(\"response is ok\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"console.log(finalMessage);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{{tempBody}}"
+				},
+				"url": {
+					"raw": "{{slackWebhookURL}}",
+					"host": [
+						"{{slackWebhookURL}}"
+					]
+				},
+				"description": "Pushing most popular repos to Slack using webhook."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "87910e86-eebe-4274-aa4a-a6441c11c3d5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "84da6eb4-cb32-4f5c-9ffd-d702cfd92091",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
