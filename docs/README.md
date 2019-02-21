@@ -2,7 +2,7 @@
 
 [![Made by Vinit Shahdeo](https://forthebadge.com/images/badges/built-with-love.svg)](https://documenter.getpostman.com/view/6186519/RznEKdvc) [![Powered By](https://forthebadge.com/images/badges/powered-by-oxygen.svg)](https://github.com/vinitshahdeo)
 
-### A [Postman](https://www.getpostman.com/) collection to discover popular repositories on [GitHub](https://github.com) for a given search query.
+### A [Postman](https://www.getpostman.com/) collection to discover popular repositories on [GitHub](https://github.com) for a given search query. It sends the popular repository on Slack channel.
 
 ```js
 
@@ -17,6 +17,18 @@
 ```
 
 > **This collection is published [here](https://documenter.getpostman.com/view/6186519/RznEKdvc).**
+
+### How does it work?
+
+- Put a search query for GitHub Repositories
+
+- Fetch GitHub Repo URLs through API call to NPM
+
+- Collect all the comments, download count, stars count, fork count from GitHub API
+
+- Perform Sentiment Analysis on Comments
+
+- Suggest best available repository for given search term on Slack
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/e6d6eaba6eeaaec69bc5)
 
