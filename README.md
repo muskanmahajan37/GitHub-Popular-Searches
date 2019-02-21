@@ -29,6 +29,7 @@ It sends the popular repository on Slack channel using webhook.
 > This collection uses [Github API](https://developer.github.com/v3/) to fetch comments and sends a report to an internal Slack channel using a [webhook](https://api.slack.com/incoming-webhooks#sending_messages).
 
 ## API Calls made
+[![Thanks](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://documenter.getpostman.com/view/6186519/RznEKdvc)
 
 1. **[GET]() npm search** - API call to [NPM](https://www.npmjs.com) to fetch the popular GitHub Repositories for a given search query.
 
@@ -58,7 +59,6 @@ https://hooks.slack.com/services/XXXXXXXXX
 ```
 
 ## Thanks!
-[![Thanks](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://facebook.com/vinit.shahdeo)
 
 Glad to see you here! I'm social. Let's [get connected](https://www.linkedin.com/in/vinitshahdeo/).
 
