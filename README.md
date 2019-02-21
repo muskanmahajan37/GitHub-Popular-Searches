@@ -1,6 +1,8 @@
 # GitHub Popular Searches
 ### A [Postman](https://www.getpostman.com/) collection to discover popular repositories on [GitHub](https://github.com) for a given search query.
 
+> **This collection is published [here](https://documenter.getpostman.com/view/6186519/RznEKdvc).**
+
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/e6d6eaba6eeaaec69bc5)
 
 > Set the following environment variables before you run this collection : 
@@ -39,4 +41,4 @@ https://apis.paralleldots.com/v3/sentiment?text={{sentimentText}}&api_key={{apiK
 ```js
 https://hooks.slack.com/services/XXXXXXXXX
 ```
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/e6d6eaba6eeaaec69bc5)
+[![Made by Vinit Shahdeo](https://forthebadge.com/images/badges/built-with-love.svg)](https://documenter.getpostman.com/view/6186519/RznEKdvc)
