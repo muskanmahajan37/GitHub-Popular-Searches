@@ -4,6 +4,8 @@
 
 ### A [Postman](https://www.getpostman.com/) collection to discover popular repositories on [GitHub](https://github.com) for a given search query. It sends the popular repository on Slack channel.
 
+> **This collection is published [here](https://documenter.getpostman.com/view/6186519/RznEKdvc).**
+
 ```js
 
   _____   ____   _____ _______ __  __          _   _ 
@@ -28,8 +30,6 @@
 
 - Suggest best available repository for given search term on Slack
 
-
-> **This collection is published [here](https://documenter.getpostman.com/view/6186519/RznEKdvc).**
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/e6d6eaba6eeaaec69bc5)
 
