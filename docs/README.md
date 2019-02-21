@@ -21,8 +21,8 @@
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/e6d6eaba6eeaaec69bc5)
 
 > Set the following environment variables before you run this collection : 
-- **{{searchTerm}}** : the query you want to search say `css minifier` etc.
-- **{{maxSize}}** : maximum number of repositories you want to fetch
+* `{{searchTerm}}` : the query you want to search say `css minifier` etc.
+* `{{maxSize}}` : maximum number of repositories you want to fetch
 
 It sends the popular repository on Slack channel using webhook.
 
@@ -43,8 +43,8 @@ http://registry.npmjs.com/-/v1/search?text=searchTerm&size=maxSize
 https://api.github.com/repos/userName/repoName/comments  
 ```
 
- - **{{repoName}}** : Name of the GitHub repository
- - **{{userName}}** : GitHub username for the given repository
+ * `{{repoName}}` : Name of the GitHub repository
+ * `{{userName}}` : GitHub username for the given repository
 
 3. **[POST]() calculate sentiments** - Calculating sentiment using [ParallelDots API](https://www.paralleldots.com) for the comments of given GitHub repository.
 
