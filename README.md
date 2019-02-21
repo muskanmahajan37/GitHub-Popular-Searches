@@ -25,8 +25,8 @@ http://registry.npmjs.com/-/v1/search?text={{searchTerm}}&size={{maxSize}}
 https://api.github.com/repos/{{userName}}/{{repoName}}/comments  
 ```
 
-- `{{repoName}}` : Name of the GitHub repository
-- `{{userName}}` : GitHub username for the given repository
+ - `{{repoName}}` : Name of the GitHub repository
+ - `{{userName}}` : GitHub username for the given repository
 
 3. **[POST]() calculate sentiments** - Calculating sentiment using [ParallelDots API](https://www.paralleldots.com) for the comments of given GitHub repository.
 
