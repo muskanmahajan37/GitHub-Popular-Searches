@@ -32,13 +32,13 @@ It sends the popular repository on Slack channel using webhook.
 ## API Calls made
 [![Thanks](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://documenter.getpostman.com/view/6186519/RznEKdvc)
 
-1. **[GET]() npm search** - API call to [NPM](https://www.npmjs.com) to fetch the popular GitHub Repositories for a given search query.
+**[GET]() npm search** - API call to [NPM](https://www.npmjs.com) to fetch the popular GitHub Repositories for a given search query.
 
 ```js
 http://registry.npmjs.com/-/v1/search?text=searchTerm&size=maxSize
 ```
 
-2. **[GET]() fetch comments** - Fetching *comments* for each repositories using [GitHub API](https://api.github.com/).
+**[GET]() fetch comments** - Fetching *comments* for each repositories using [GitHub API](https://api.github.com/).
 
 ```js
 https://api.github.com/repos/userName/repoName/comments  
@@ -47,13 +47,13 @@ https://api.github.com/repos/userName/repoName/comments
  - **`repoName`** : Name of the GitHub repository
  - **`userName`** : GitHub username for the given repository
 
-3. **[POST]() calculate sentiments** - Calculating sentiment using [ParallelDots API](https://www.paralleldots.com) for the comments of given GitHub repository.
+**[POST]() calculate sentiments** - Calculating sentiment using [ParallelDots API](https://www.paralleldots.com) for the comments of given GitHub repository.
 
 ```js
 https://apis.paralleldots.com/v3/sentiment?text=sentimentText&api_key=API_KEY
 ```
 
-4. **[POST]() push to slack** - Pushing most popular repos to Slack using [webhook](https://api.slack.com/incoming-webhooks).
+**[POST]() push to slack** - Pushing most popular repos to Slack using [webhook](https://api.slack.com/incoming-webhooks).
 
 ```js
 https://hooks.slack.com/services/XXXXXXXXX
