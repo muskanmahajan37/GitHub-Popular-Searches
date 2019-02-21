@@ -60,6 +60,6 @@ https://hooks.slack.com/services/XXXXXXXXX
 ## Thanks!
 [![Thanks](https://forthebadge.com/images/badges/you-didnt-ask-for-this.svg)](https://facebook.com/vinit.shahdeo)
 
-Glad to see you here! I'm social. Let's `get connected`.
+Glad to see you here! I'm social. Let's [get connected](https://www.linkedin.com/in/vinitshahdeo/).
 
 <a href="https://www.facebook.com/vinit.shahdeo/" target="_blank"><img height="32" width="32" src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/facebook.svg" /></a> &nbsp;&nbsp;<a href="https://twitter.com/Vinit_Shahdeo" target="_blank"><img height="32" width="32" src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/twitter.svg" /></a> &nbsp;&nbsp;<a href="https://www.linkedin.com/in/vinitshahdeo/" target="_blank"><img height="32" width="32" src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/linkedin.svg" /></a>
