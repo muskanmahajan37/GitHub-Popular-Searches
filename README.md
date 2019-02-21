@@ -1,6 +1,8 @@
 # GitHub Popular Searches
 ### A collection to discover popular repositories on [GitHub](https://github.com) for a given search query.
 
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/e6d6eaba6eeaaec69bc5)
+
 > Set the following environment variables before you run this collection : 
 - **{{searchTerm}}** : the query you want to search
 - **{{maxSize}}** : maximum number of repositories you want to fetch
@@ -30,8 +32,9 @@ https://api.github.com/repos/{{userName}}/{{repoName}}/comments
 https://apis.paralleldots.com/v3/sentiment?text={{sentimentText}}&api_key={{apiKey}}
 ```
 
-4. **[POST]() push to slack** - Pushing most popular repos to Slack using webhook.
+4. **[POST]() push to slack** - Pushing most popular repos to Slack using [webhook](https://api.slack.com/incoming-webhooks).
 
 ```
 https://hooks.slack.com/services/XXXXXXXXX
 ```
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/e6d6eaba6eeaaec69bc5)
