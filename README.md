@@ -1,6 +1,6 @@
 # GitHub Popular Searches
 
-[![Made by Vinit Shahdeo](https://forthebadge.com/images/badges/built-with-love.svg)](https://documenter.getpostman.com/view/6186519/RznEKdvc) [![Powered By](https://forthebadge.com/images/badges/powered-by-oxygen.svg)](https://github.com/vinitshahdeo)
+[![Github Popular Searces](http://img.shields.io/badge/Github-Popular%20Searches-blue.svg?style=for-the-badge&logo=github)](https://vinitshahdeo.github.io/GitHub-Popular-Searches/) [![Postman Collection](http://img.shields.io/badge/Postman-Collection-orange.svg?style=for-the-badge&logo=postman)](https://documenter.getpostman.com/view/6186519/RznEKdvc)
 
 ### A [Postman](https://www.getpostman.com/) collection to discover popular repositories on [GitHub](https://github.com) for a given search query. It sends the popular repository on Slack channel.
 
@@ -70,6 +70,10 @@ https://apis.paralleldots.com/v3/sentiment?text={{sentimentText}}&api_key={{apiK
 ```js
 https://hooks.slack.com/services/XXXXXXXXX
 ```
+
+
+[![Made by Vinit Shahdeo](https://forthebadge.com/images/badges/built-with-love.svg)](https://documenter.getpostman.com/view/6186519/RznEKdvc) [![Powered By](https://forthebadge.com/images/badges/powered-by-oxygen.svg)](https://github.com/vinitshahdeo)
+
 
 ## Thanks!
 
